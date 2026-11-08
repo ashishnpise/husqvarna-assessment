@@ -116,11 +116,3 @@ When the app boots for the first time, the database is populated with 10 realist
 | `battery-telemetry-streaming` | `prod` | **Enabled** | High-frequency MQTT telemetry streaming for battery health |
 | `fleet-dashboard-analytics` | `staging` | **Enabled** | Real-time equipment utilization analytics dashboard |
 | `smart-scheduling-engine` | `prod` | Disabled | Automated weather-aware mowing schedule optimizer |
-
----
-
-## 🔍 Trade-offs & Production Considerations
-
-1. **Sequelize vs. Prisma**: Selected Sequelize for pure JavaScript/TypeScript execution, eliminating native Rust engine binary downloads, drastically speeding up Docker container build times, and simplifying cold-start execution.
-2. **In-Process Async Worker vs. Distributed Queue**: For a local self-contained harness, an in-process decoupled dispatcher (`setImmediate` / event emitter) meets the non-blocking requirement without introducing Redis / RabbitMQ infrastructure overhead. In a distributed multi-node production setup, this would be backed by BullMQ or AWS SQS.
-3. **Actor Attribution**: Provided a client actor selector and `x-actor` header fallback (`admin@husqvarna.com`), allowing reviewers to simulate different team members taking actions and inspecting multi-actor audit feeds.
