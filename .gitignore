@@ -21,6 +21,7 @@ yarn-error.log*
 
 # Environment Variables
 # Ignore root/subfolder .env files except the committed template for the local harness
+backend/config/.env
 */.env
 .env
 .env.local
