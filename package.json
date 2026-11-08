@@ -1,0 +1,31 @@
+{
+  "name": "husqvarna-feature-flags-harness",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-stack vertical slice for Feature Flags & Audit Trail (Husqvarna Senior Full Stack Engineer Assessment)",
+  "scripts": {
+    "dev": "docker compose -f Docker/docker-compose.yml up --build",
+    "dev:detached": "docker compose -f Docker/docker-compose.yml up -d --build",
+    "down": "docker compose -f Docker/docker-compose.yml down",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "npm --prefix backend test",
+    "test:frontend": "npm --prefix frontend test",
+    "lint": "npm --prefix backend run lint && npm --prefix frontend run lint",
+    "migrate": "docker compose -f Docker/docker-compose.yml exec backend npm run db:migrate",
+    "migrate:undo": "docker compose -f Docker/docker-compose.yml exec backend npm run db:migrate:undo",
+    "seed": "docker compose -f Docker/docker-compose.yml exec backend npm run db:seed",
+    "seed:undo": "docker compose -f Docker/docker-compose.yml exec backend npm run db:seed:undo"
+  },
+  "keywords": [
+    "feature-flags",
+    "audit-log",
+    "express",
+    "react",
+    "typescript",
+    "sequelize-cli",
+    "postgresql",
+    "docker"
+  ],
+  "author": "Ashish",
+  "license": "MIT"
+}

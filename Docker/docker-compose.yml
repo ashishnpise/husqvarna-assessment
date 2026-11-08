@@ -1,0 +1,65 @@
+name: hasqvarna
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: husqvarna-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: husqvarna_flags
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d husqvarna_flags"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 3s
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../Docker/Dockerfile.backend
+    container_name: husqvarna-backend
+    restart: on-failure
+    env_file:
+      - path: ../backend/config/.env
+        required: true
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: ../Docker/Dockerfile.frontend
+    container_name: husqvarna-frontend
+    restart: on-failure
+    environment:
+      VITE_API_URL: http://localhost:4000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+
